@@ -1,0 +1,33 @@
+#! /bin/sh
+
+
+set -e
+
+case "$1" in
+
+	-h|--help)
+
+		echo "${0##*/}: Pacman inside your home directory."
+		echo "Usage: ${0##*/} <command> [arguments]"
+		exit
+
+	;;
+
+esac
+
+_e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
+
+
+#	Check the environment.
+
+test -d $HOME/.pnx ||
+	_e ""
+
+
+#	Launch the command.
+
+export \
+	PATH=$HOME/.pnx/usr/bin \
+	LD_LIBRARY_PATH=$HOME/pnx/usr/lib:$HOME/pnx/lib:$HOME/pnx/lib64
+
+"$@"

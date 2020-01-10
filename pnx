@@ -1,0 +1,34 @@
+#! /bin/sh
+
+
+set -e
+
+case "$1" in
+
+	-h|--help)
+
+		echo "${0##*/}: Pacman inside your home directory."
+		echo "Usage: ${0##*/} [options]"
+		exit
+
+	;;
+
+esac
+
+_e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
+
+
+#	Prepare the environment and run.
+
+mkdir -p ~/.pnx
+
+pacman "$@"
+
+
+#	Integrate .desktop files.
+
+mkdir -p ~/.local/share/applications
+
+for dot_d in $(pacman -r ~/.pnx -Qql | grep '\.desktop'); do
+	ln -sf ~/.pnx/$dot_d ~/.local/share/applications
+done
