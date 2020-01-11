@@ -28,6 +28,6 @@ test -d $HOME/.pnx ||
 
 export \
 	PATH=$HOME/.pnx/usr/bin \
-	LD_LIBRARY_PATH=$HOME/pnx/usr/lib:$HOME/pnx/lib:$HOME/pnx/lib64
+	LD_LIBRARY_PATH=$HOME/.pnx/usr/lib:$HOME/.pnx/lib:$HOME/.pnx/lib64
 
 "$@"
