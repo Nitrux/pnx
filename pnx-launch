@@ -21,13 +21,16 @@ _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 #	Check the environment.
 
 test -d $HOME/.pnx ||
-	_e ""
+	_e "The environment has not been initialized. Please run: pnx init."
 
 
-#	Launch the command.
+#	Configure the execution environment.
 
 export \
 	PATH=$HOME/.pnx/usr/bin \
 	LD_LIBRARY_PATH=$HOME/.pnx/usr/lib:$HOME/.pnx/lib:$HOME/.pnx/lib64
+
+
+#	Launch the command.
 
 "$@"
