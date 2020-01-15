@@ -1,2 +1,3 @@
 # pnx
-Pacman for Nitrux
+
+Use `pacman` out of Arch Linux™.
