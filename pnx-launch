@@ -7,9 +7,16 @@ case "$1" in
 
 	-h|--help)
 
-		echo "${0##*/}: Pacman inside your home directory."
+		echo "${0##*/}: Launch a program installed with PNX."
 		echo "Usage: ${0##*/} <command> [arguments]"
 		exit
+
+	;;
+
+	-x|--debug)
+
+		set -x
+		shift
 
 	;;
 
@@ -18,19 +25,18 @@ esac
 _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 
 
-#	Check the environment.
+# -- Configure the execution environment.
 
-test -d $HOME/.pnx ||
-	_e "The environment has not been initialized. Please run: pnx init."
-
-
-#	Configure the execution environment.
+PNX_ROOT=/home/.pnx
 
 export \
-	PATH=$HOME/.pnx/usr/bin \
-	LD_LIBRARY_PATH=$HOME/.pnx/usr/lib:$HOME/.pnx/lib:$HOME/.pnx/lib64
+	PATH=$PNX_ROOT/usr/bin/:$PNX_ROOT/usr/sbin/:$PNX_ROOT/usr/games/:$PNX_ROOT/bin/:$PNX_ROOT/sbin/ \
+	LD_LIBRARY_PATH=$PNX_ROOT/usr/lib/:$PNX_ROOT/usr/lib/i386-linux-gnu/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/:$PNX_ROOT/usr/lib32/:$PNX_ROOT/usr/lib64/:$PNX_ROOT/lib/:$PNX_ROOT/lib/i386-linux-gnu/:$PNX_ROOT/lib/x86_64-linux-gnu/:$PNX_ROOT/lib32/:$PNX_ROOT/lib64/ \
+	XDG_DATA_DIRS=$PNX_ROOT/usr/share/ \
+	GSETTINGS_SCHEMA_DIR=$PNX_ROOT/usr/share/glib-2.0/schemas/ \
+	QT_PLUGIN_PATH=$PNX_ROOT/usr/lib/qt4/plugins/:$PNX_ROOT/usr/lib/i386-linux-gnu/qt4/plugins/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/qt4/plugins/:$PNX_ROOT/usr/lib32/qt4/plugins/:$PNX_ROOT/usr/lib64/qt4/plugins/:$PNX_ROOT/usr/lib/qt5/plugins/:$PNX_ROOT/usr/lib/i386-linux-gnu/qt5/plugins/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/qt5/plugins/:$PNX_ROOT/usr/lib32/qt5/plugins/:$PNX_ROOT/usr/lib64/qt5/plugins/
 
 
-#	Launch the command.
+# -- Launch the command.
 
 "$@"
