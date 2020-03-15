@@ -4,7 +4,7 @@
 #    Install dependencies.
 
 apt -qq update > /dev/null
-apt -yy install wget patchelf file libcairo2 mtools xorriso axel gdisk zsync btrfs-progs dosfstools grub-common grub2-common grub-efi-amd64 grub-efi-amd64-bin git autoconf gettext automake libtool-bin autopoint pkg-config libncurses5-dev bison
+apt -yy install wget patchelf file git
 
 
 #    Add tooling for AppImage.
@@ -19,9 +19,6 @@ chmod +x execs
 
 
 #    Copy binaries and its dependencies to appdir.
-
-wget -q https://raw.githubusercontent.com/Nitrux/tools/master/mkiso -O /bin/mkiso
-chmod +x /bin/mkiso
 
 ./copier appdir $(./execs appdir/*)
 

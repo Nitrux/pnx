@@ -34,7 +34,7 @@ export \
 	QT_PLUGIN_PATH=$PNX_ROOT/usr/lib/qt4/plugins/:$PNX_ROOT/usr/lib/i386-linux-gnu/qt4/plugins/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/qt4/plugins/:$PNX_ROOT/usr/lib32/qt4/plugins/:$PNX_ROOT/usr/lib64/qt4/plugins/:$PNX_ROOT/usr/lib/qt5/plugins/:$PNX_ROOT/usr/lib/i386-linux-gnu/qt5/plugins/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/qt5/plugins/:$PNX_ROOT/usr/lib32/qt5/plugins/:$PNX_ROOT/usr/lib64/qt5/plugins/
 	TERM=xterm-256color \
 	GTK_PATH=$PNX_ROOT/usr/lib/:$PNX_ROOT/lib:$PNX_ROOT/lib64 \
-	
+
 
 # -- Launch the command.
 
