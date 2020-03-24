@@ -19,7 +19,7 @@ chmod +x execs
 
 #    Copy binaries and its dependencies to appdir.
 
-./copier appdir $(./execs appdir/*)
+sh -x ./copier appdir $(sh -x ./execs appdir/*)
 
 
 #    Variables for generating the AppImage.
