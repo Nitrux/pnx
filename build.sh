@@ -3,8 +3,7 @@
 
 #    Install dependencies.
 
-apt -qq update > /dev/null
-apt -yy install wget patchelf file git
+pacman -Syu wget patchelf file git
 
 
 #    Add tooling for AppImage.
