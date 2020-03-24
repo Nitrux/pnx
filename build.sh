@@ -3,7 +3,7 @@
 
 #    Install dependencies.
 
-pacman --noconfirm -Syu wget patchelf file git
+pacman --noconfirm -Syu base-devel wget patchelf file git
 
 
 #    Add tooling for AppImage.
