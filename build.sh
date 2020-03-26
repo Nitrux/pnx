@@ -22,7 +22,8 @@ chmod +x execs
 ./copier \
 	appdir \
 	bash \
-	$(./execs appdir/*)
+	pacman -Qql pacman | grep -E 'bin/.+'
+#	$(./execs appdir/*)
 
 
 #    Variables for generating the AppImage.
