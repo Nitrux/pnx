@@ -21,7 +21,7 @@ chmod +x execs
 
 ./copier \
 	appdir \
-	bash \
+	/bin/bash \
 	pacman -Qql pacman | grep -E 'bin/.+'
 #	$(./execs appdir/*)
 
