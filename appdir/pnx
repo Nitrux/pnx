@@ -109,12 +109,6 @@ case "$1" in
 esac
 
 
-#	Probe for PNX root existence.
-
-test -d $PNX_ROOT ||
-	_e "${0##*/} has not been initialized. Please run: sudo ${0##*/} --initialize."
-
-
 #	Require root for the following operations.
 
 test $(id -u) -ne 0 &&
@@ -163,6 +157,12 @@ case "$1" in
 	;;
 
 esac
+
+
+#	Probe for PNX root existence.
+
+test -d $PNX_ROOT ||
+	_e "${0##*/} has not been initialized. Please run: sudo ${0##*/} --initialize."
 
 
 #	By default use Pacman if no flag is specified.
