@@ -113,7 +113,7 @@ esac
 
 test $(id -u) -ne 0 &&
 	_e "Please run ${0##*/} as root. Try with: sudo ${0##*/}."
-­
+
 
 case "$1" in
 
@@ -131,6 +131,7 @@ case "$1" in
 		echo "Please run these commands to start using PNX:"
 		echo "sudo ${0##*/} --key --init"
 		echo "sudo ${0##*/} --key --populate"
+		exit
 
 	;;
 
