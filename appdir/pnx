@@ -31,14 +31,14 @@
 _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 
 
-# -- Set PNX directories.
+#		Set PNX directories.
 
 PNX_ROOT="/home/.pnx"
 PNX_CACHE="/var/lib/pacman"
 PNX_KEYRINGS="/usr/share/pacman/keyrings"
 
 
-# -- Flags for the command.
+#		Flags for the command.
 
 case "$1" in
 
@@ -96,7 +96,7 @@ case "$1" in
 
 	--release)
 
-		echo "${0##*/}: version 1.0, 14th January 2020."
+		echo "${0##*/}: version $_pnx_version, 14th January 2020."
 		echo "The license used for this file and its contents is: BSD-3-Clause."
 		echo "Authors:"
 		echo "    Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>"
@@ -109,7 +109,7 @@ case "$1" in
 esac
 
 
-#	Require root for the following operations.
+#		Require root for the following operations.
 
 test $(id -u) -ne 0 &&
 	_e "Please run ${0##*/} as root. Try with: sudo ${0##*/}."
@@ -135,20 +135,23 @@ case "$1" in
 
 	;;
 
+
 	--key)
 
 		export LIBRARY=$APPDIR/usr/share/makepkg
-		pacman-key "$2"
+		pacman-key "$@"
 		exit
 
 	;;
+
 
 	--repo)
 
-		repo-add "$2"
+		repo-add "$@"
 		exit
 
 	;;
+
 
 	--remove-dirs)
 
@@ -160,18 +163,18 @@ case "$1" in
 esac
 
 
-#	Probe for PNX root existence.
+#		Probe for pnx root existence.
 
 test -d $PNX_ROOT ||
 	_e "${0##*/} has not been initialized. Please run: sudo ${0##*/} --initialize."
 
 
-#	By default use Pacman if no flag is specified.
+#		By default use Pacman if no flag is specified.
 
 pacman "$@"
 
 
-# -- Integrate .desktop files from PNX directory into the user's directory after installing a program with Pacman.
+#		Integrate .desktop files from PNX directory into the user's directory after installing a program with Pacman.
 
 # for dot_d in $(pacman -r $PNX_ROOT -Qql | grep '\.desktop'); do
 # 	ln -sf $PNX_ROOT/$dot_d $HOME/.local/share/applications

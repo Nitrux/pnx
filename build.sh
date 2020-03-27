@@ -22,8 +22,7 @@ chmod +x execs
 ./copier \
 	appdir \
 	/bin/bash \
-	$(pacman -Qql pacman | grep -E 'bin/.+')
-#	$(./execs appdir/*)
+	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+')
 
 
 #	Copy pacman keyrings.
