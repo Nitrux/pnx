@@ -44,7 +44,7 @@ UPDATE_URL="zsync|https://github.com/Nitrux/pnx/releases/download/continuous-$TR
 
 #    Write the commit hash that generated this build.
 
-sed -i "s/@TRAVIS_COMMIT@/$TRAVIS_COMMIT/" appdir/pnx
+sed -i "s/@_COMMIT@/$TRAVIS_COMMIT/" appdir/pnx
 
 
 #    Generate the AppImage.

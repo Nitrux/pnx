@@ -25,17 +25,23 @@
 
 
 # #########################
-# ####    PNX v1.0.     ###
+# ####   pnx v1.0.0.    ###
 # #########################
 
 _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 
 
-#		Set PNX directories.
+#		Set pnx directories.
 
 PNX_ROOT="/home/.pnx"
 PNX_CACHE="/var/lib/pacman"
 PNX_KEYRINGS="/usr/share/pacman/keyrings"
+
+
+#		Version and commit that generated this build.
+
+_pnx_version=1.0.0
+PNX_COMMIT_HASH=@_COMMIT@
 
 
 #		Flags for the command.
@@ -44,27 +50,27 @@ case "$1" in
 
 	-h|--help)
 
-		echo "Welcome to PNX!"
+		echo "Welcome to pnx!"
 		echo "Description:"
-		echo "    PNX is a wrapper for Pacman. Pacman is a package management utility that tracks installed packages on a Linux system."
-		echo "    This wrapper allows the user to use Pacman on a Linux distribution that is not a derivative of Arch Linux without conflicts with"
-		echo "    the distribution existing package manager."
+		echo "    pnx is a wrapper for Pacman. Pacman is a package management utility that tracks installed packages on a Linux system."
+		echo "    This wrapper allows the user to use Pacman on a Linux distribution that is not a derivative of Arch Linux without"
+		echo "    conflicts with the distribution existing package manager."
 		echo "    Report bugs at: https://github.com/Nitrux/pnx."
 		echo "Flags:"
-		echo "    --initialize, Create PNX root directory."
+		echo "    --initialize, Create pnx root directory."
 		echo "    --key, Use pacman-key: pacman-key - manage pacman's list of trusted keys."
 		echo "    --repo, Use repo-add: repo-add - package database maintenance utility."
-		echo "    --launch, Launch a program installed using PNX."
-		echo "    --remove-dirs, Remove PNX directories."
-		echo "    --debug, Run PNX with debug on."
+		echo "    --launch, Launch a program installed using pnx."
+		echo "    --remove-dirs, Remove pnx directories."
+		echo "    --debug, Run pnx with debug on."
 		echo "    --release, Show the version."
 		echo "Usage:"
-		echo "    When no flag is specified, PNX will default to package management."
+		echo "    When no flag is specified, pnx will default to package management."
 		echo "        pnx <operation> [options] [targets]"
 		echo "        pnx <flag> <operation> [options] [targets]"
 		echo "Examples:"
 		echo "sudo pnx -S inkscape"
-		echo "    To install a package using PNX use the same syntax as Pacman."
+		echo "    To install a package using pnx use the same syntax as Pacman."
 		echo "    For example, pnx -S inkscape will download and install inkscape and all the packages it depends on."
 		echo "sudo pnx -Syu"
 		echo "    Update package list and upgrade all packages afterwards."
@@ -73,7 +79,7 @@ case "$1" in
 		echo "sudo pnx --repo --verify"
 		echo "    Verify the PGP signature of the database before updating the database."
 		echo "pnx --launch inkscape"
-		echo "    This will execute a program installed using PNX."
+		echo "    This will execute a program installed using pnx."
 		exit
 
 	;;
@@ -96,7 +102,7 @@ case "$1" in
 
 	--release)
 
-		echo "${0##*/}: version $_pnx_version, 14th January 2020."
+		echo "pnx: version $_pnx_version, 14th January 2020."
 		echo "The license used for this file and its contents is: BSD-3-Clause."
 		echo "Authors:"
 		echo "    Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>"
@@ -112,7 +118,7 @@ esac
 #		Require root for the following operations.
 
 test $(id -u) -ne 0 &&
-	_e "Please run ${0##*/} as root. Try with: sudo ${0##*/}."
+	_e "Please run pnx as root. Try with: sudo pnx."
 
 
 case "$1" in
@@ -128,9 +134,9 @@ case "$1" in
 		mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
 		cp -a $APPDIR/usr/share/pacman/keyrings/* $PNX_KEYRINGS
 
-		echo "Please run these commands to start using PNX:"
-		echo "sudo ${0##*/} --key --init"
-		echo "sudo ${0##*/} --key --populate"
+		echo "Please run these commands to start using pnx:"
+		echo "sudo pnx --key --init"
+		echo "sudo pnx --key --populate"
 		exit
 
 	;;
@@ -155,7 +161,7 @@ case "$1" in
 
 	--remove-dirs)
 
-		rm -R $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
+		rm -rf $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
 		exit
 
 	;;
@@ -166,7 +172,7 @@ esac
 #		Probe for pnx root existence.
 
 test -d $PNX_ROOT ||
-	_e "${0##*/} has not been initialized. Please run: sudo ${0##*/} --initialize."
+	_e "pnx has not been initialized. Please run: sudo pnx --initialize."
 
 
 #		By default use Pacman if no flag is specified.
@@ -174,7 +180,7 @@ test -d $PNX_ROOT ||
 pacman "$@"
 
 
-#		Integrate .desktop files from PNX directory into the user's directory after installing a program with Pacman.
+#		Integrate .desktop files from pnx directory into the user's directory after installing a program with Pacman.
 
 # for dot_d in $(pacman -r $PNX_ROOT -Qql | grep '\.desktop'); do
 # 	ln -sf $PNX_ROOT/$dot_d $HOME/.local/share/applications
