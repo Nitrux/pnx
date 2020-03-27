@@ -26,6 +26,12 @@ chmod +x execs
 #	$(./execs appdir/*)
 
 
+#	Copy pacman keyrings.
+
+mkdir -p appdir/usr/share/pacman/keyrings/
+cp /usr/share/pacman/keyrings/* appdir/usr/share/pacman/keyrings/
+
+
 #    Variables for generating the AppImage.
 
 export \
