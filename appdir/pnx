@@ -33,7 +33,7 @@ _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 
 #		Set pnx directories.
 
-PNX_ROOT="~/.pnx"
+PNX_ROOT=~/.pnx
 PNX_CACHE="$PNX_ROOT/var/lib/pacman"
 PNX_KEYRINGS="$PNX_ROOT/usr/share/pacman/keyrings"
 
