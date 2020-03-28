@@ -84,6 +84,7 @@ case "$1" in
 
 	;;
 
+
 	--launch)
 
 		export \
@@ -100,6 +101,7 @@ case "$1" in
 
 	;;
 
+
 	--release)
 
 		echo "pnx: version $_pnx_version, 14th January 2020."
@@ -112,16 +114,6 @@ case "$1" in
 
 	;;
 
-esac
-
-
-#		Require root for the following operations.
-
-test $(id -u) -ne 0 &&
-	_e "Please run pnx as root. Try with: sudo pnx."
-
-
-case "$1" in
 
 	--initialize)
 
@@ -134,15 +126,15 @@ case "$1" in
 		mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
 		cp -a $APPDIR/keyrings/* $PNX_KEYRINGS
 
-		mkdir -p "$1/var/lib/pacman"
+		mkdir -p "$PNX_ROOT/var/lib/pacman"
 
-		pacman --noconfirm -r $PNX_HOME -Syu \
+		pacman --noconfirm -r $PNX_ROOT -Syu \
 			base bash readline ncurses util-linux coreutils libcap iputils which grep sudo \
 			acl archlinux-keyring attr bzip2 curl expat glibc gpgme libarchive openssl nss nspr \
 			libassuan libgpg-error libnghttp2 libssh2 lzo openssl pacman pacman-mirrorlist xz zlib \
 			krb5 e2fsprogs keyutils libidn2 libunistring gcc-libs lz4 libpsl icu libunistring zstd
 
-		fakechroot chroot $PNX_HOME pacman --noconfirm -S base
+		fakechroot chroot $PNX_ROOT pacman --noconfirm -S base
 
 		echo "Please run these commands to start using pnx:"
 		echo "pnx --key --init"
@@ -155,7 +147,7 @@ case "$1" in
 	--key)
 
 		export LIBRARY=$APPDIR/usr/share/makepkg
-		fakechroot chroot pacman-key "$@"
+		fakechroot chroot $PNX_ROOT pacman-key "$@"
 		exit
 
 	;;
@@ -163,7 +155,7 @@ case "$1" in
 
 	--repo)
 
-		repo-add "$@"
+		fakechroot chroot $PNX_ROOT repo-add "$@"
 		exit
 
 	;;
@@ -187,7 +179,7 @@ test -d $PNX_ROOT ||
 
 #		By default use Pacman if no flag is specified.
 
-pacman "$@"
+fakechroot chroot $PNX_ROOT pacman "$@"
 
 
 #		Integrate .desktop files from pnx directory into the user's directory after installing a program with Pacman.
