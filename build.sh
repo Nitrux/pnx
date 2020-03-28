@@ -22,13 +22,15 @@ chmod +x execs
 ./copier \
 	appdir \
 	/bin/bash \
+	fakeroot $(execs /bin/fakeroot) \
+	fakechroot $(execs /bin/fakechroot) \
 	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+')
 
 
 #	Copy pacman keyrings.
 
-mkdir -p appdir/usr/share/pacman/keyrings/
-cp /usr/share/pacman/keyrings/* appdir/usr/share/pacman/keyrings/
+mkdir -p appdir/keyrings/
+cp /usr/share/pacman/keyrings/* appdir/keyrings/
 
 
 #    Variables for generating the AppImage.
