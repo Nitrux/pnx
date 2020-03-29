@@ -132,7 +132,7 @@ case "$1" in
 			libassuan libgpg-error libnghttp2 libssh2 lzo openssl pacman pacman-mirrorlist xz zlib \
 			krb5 e2fsprogs keyutils libidn2 libunistring gcc-libs lz4 libpsl icu libunistring zstd
 
-		fakechroot chroot $PNX_ROOT pacman --noconfirm -S base
+		runch $PNX_ROOT pacman --noconfirm -S base
 
 		echo "Please run these commands to start using pnx:"
 		echo "$0 --key --init"
@@ -145,7 +145,7 @@ case "$1" in
 	--key)
 
 		export LIBRARY=$APPDIR/usr/share/makepkg
-		fakechroot chroot $PNX_ROOT pacman-key "$@"
+		runch $PNX_ROOT pacman-key "$@"
 		exit
 
 	;;
@@ -153,7 +153,7 @@ case "$1" in
 
 	--repo)
 
-		fakechroot chroot $PNX_ROOT repo-add "$@"
+		runch $PNX_ROOT repo-add "$@"
 		exit
 
 	;;
@@ -177,7 +177,7 @@ test -d $PNX_ROOT ||
 
 #		By default use Pacman if no flag is specified.
 
-fakechroot chroot $PNX_ROOT pacman "$@"
+runch $PNX_ROOT pacman "$@"
 
 
 #		Integrate .desktop files from pnx directory into the user's directory after installing a program with Pacman.

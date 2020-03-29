@@ -3,7 +3,7 @@
 
 #    Install dependencies.
 
-pacman --noconfirm -Syu base-devel wget patchelf file git fakeroot fakechroot
+pacman --noconfirm -Syu base-devel wget patchelf file git
 
 
 #    Add tooling for AppImage.
@@ -19,11 +19,12 @@ chmod +x execs
 
 #    Copy binaries and its dependencies to appdir.
 
+wget -q https://raw.githubusercontent.com/Nitrux/tools/master/runch
+
 ./copier \
 	appdir \
 	/bin/bash \
-	$(which fakeroot) $(./execs /bin/fakeroot) \
-	$(which fakechroot) $(./execs /bin/fakechroot) \
+	runch \
 	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+[^/]$')
 
 
