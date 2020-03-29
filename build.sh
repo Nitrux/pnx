@@ -3,7 +3,7 @@
 
 #    Install dependencies.
 
-pacman --noconfirm -Syu base-devel wget patchelf file git
+pacman --noconfirm -Syu base-devel wget patchelf file git fakeroot fakechroot
 
 
 #    Add tooling for AppImage.
@@ -24,7 +24,7 @@ chmod +x execs
 	/bin/bash \
 	$(which fakeroot) $(./execs /bin/fakeroot) \
 	$(which fakechroot) $(./execs /bin/fakechroot) \
-	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+')
+	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+[^/]$')
 
 
 #    Variables for generating the AppImage.
