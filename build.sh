@@ -27,12 +27,6 @@ chmod +x execs
 	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+')
 
 
-#	Copy pacman keyrings.
-
-mkdir -p appdir/keyrings/
-cp /usr/share/pacman/keyrings/* appdir/keyrings/
-
-
 #    Variables for generating the AppImage.
 
 export \

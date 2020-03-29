@@ -35,7 +35,6 @@ _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 
 PNX_ROOT=~/.pnx
 PNX_CACHE="$PNX_ROOT/var/lib/pacman"
-PNX_KEYRINGS="$PNX_ROOT/usr/share/pacman/keyrings"
 
 
 #		Version and commit that generated this build.
@@ -69,14 +68,14 @@ case "$1" in
 		echo "        pnx <operation> [options] [targets]"
 		echo "        pnx <flag> <operation> [options] [targets]"
 		echo "Examples:"
-		echo "sudo pnx -S inkscape"
+		echo "pnx -S inkscape"
 		echo "    To install a package using pnx use the same syntax as Pacman."
 		echo "    For example, pnx -S inkscape will download and install inkscape and all the packages it depends on."
-		echo "sudo pnx -Syu"
+		echo "pnx -Syu"
 		echo "    Update package list and upgrade all packages afterwards."
-		echo "sudo pnx --key --init"
+		echo "pnx --key --init"
 		echo "    Ensure the keyring is properly initialized and has the required access permissions."
-		echo "sudo pnx --repo --verify"
+		echo "pnx --repo --verify"
 		echo "    Verify the PGP signature of the database before updating the database."
 		echo "pnx --launch inkscape"
 		echo "    This will execute a program installed using pnx."
@@ -124,7 +123,6 @@ case "$1" in
 		_e "Already initialized."
 
 		mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
-		cp -a $APPDIR/keyrings/* $PNX_KEYRINGS
 
 		mkdir -p "$PNX_ROOT/var/lib/pacman"
 
@@ -137,8 +135,8 @@ case "$1" in
 		fakechroot chroot $PNX_ROOT pacman --noconfirm -S base
 
 		echo "Please run these commands to start using pnx:"
-		echo "pnx --key --init"
-		echo "pnx --key --populate"
+		echo "$0 --key --init"
+		echo "$0 --key --populate"
 		exit
 
 	;;
@@ -174,7 +172,7 @@ esac
 #		Probe for pnx root existence.
 
 test -d $PNX_ROOT ||
-	_e "pnx has not been initialized. Please run: sudo pnx --initialize."
+	_e "pnx has not been initialized. Please run: $0 --initialize."
 
 
 #		By default use Pacman if no flag is specified.
