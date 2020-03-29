@@ -22,8 +22,8 @@ chmod +x execs
 ./copier \
 	appdir \
 	/bin/bash \
-	fakeroot $(execs /bin/fakeroot) \
-	fakechroot $(execs /bin/fakechroot) \
+	$(which fakeroot) $(./execs /bin/fakeroot) \
+	$(which fakechroot) $(./execs /bin/fakechroot) \
 	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+')
 
 
