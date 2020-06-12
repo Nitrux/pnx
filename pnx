@@ -40,7 +40,7 @@ _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 # -- Set PNX directories.
 
 PNX_ROOT="/home/.pnx"
-PNX_CACHE="/var/lib/pacman"
+PNX_CACHE="/home/.pnx/var/lib/pacman"
 PNX_KEYRINGS="/usr/share/pacman/keyrings"
 
 
@@ -87,7 +87,7 @@ case "$1" in
 
 	--initialize)
 
-		[ -d $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS ] && _e "${0##*/} directories already exist!.\nExiting...\n " || echo "${0##*/} directories do not exist, creating...\n\n Please run these commands to start using PNX:\n sudo ${0##*/} --key --init\n sudo ${0##*/} --key --populate\n " && mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS && cp -a $APPDIR/usr/share/pacman/keyrings/* $PNX_KEYRINGS
+		[ -d $PNX_ROOT ] && _e "${0##*/} directories already exist!.\nExiting...\n " || echo "${0##*/} directories do not exist, creating...\n\n Please run these commands to start using PNX:\n sudo ${0##*/} --key --init\n sudo ${0##*/} --key --populate\n " && mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS && cp -a $APPDIR/usr/share/pacman/keyrings/* $PNX_KEYRINGS
 		exit
 
 	;;
@@ -117,7 +117,7 @@ case "$1" in
 
 	--remove-dirs)
 
-		rm -R $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
+		rm -R $PNX_ROOT
 		exit
 
 	;;
