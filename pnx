@@ -24,9 +24,9 @@
 #############################################################################################################################################################################
 
 
-# #########################
-# ####    PNX v1.0.     ###
-# #########################
+# ##########################
+# ####    PNX v1.0.1     ###
+# ##########################
 
 
 if [ "$EUID" -ne 0 ]
@@ -87,7 +87,7 @@ case "$1" in
 
 	--initialize)
 
-		[ -d $PNX_ROOT ] && _e "${0##*/} directories already exist!.\nExiting...\n " || echo "${0##*/} directories do not exist, creating...\n\n Please run these commands to start using PNX:\n sudo ${0##*/} --key --init\n sudo ${0##*/} --key --populate\n " && mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS && cp -a $APPDIR/usr/share/pacman/keyrings/* $PNX_KEYRINGS
+		[ -d $PNX_ROOT ] && _e "${0##*/} directory already exist!.\nExiting...\n " || echo "${0##*/} directories do not exist, creating...\n\n Please run these commands to start using PNX:\n sudo ${0##*/} --key --init\n sudo ${0##*/} --key --populate\n " && mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS && cp -a $APPDIR/usr/share/pacman/keyrings/* $PNX_KEYRINGS
 		exit
 
 	;;
@@ -112,6 +112,14 @@ case "$1" in
 
 		pnx-launch "$2"
 		exit
+	;;
+
+	--makepkg)
+
+		export \
+			LIBRARY=$APPDIR/usr/share/makepkg &&
+		makepkg "$2"
+		exit
 
 	;;
 
@@ -131,7 +139,7 @@ case "$1" in
 
 	--release)
 
-		echo "${0##*/}: version 1.0, 14th January 2020.\n "
+		echo "${0##*/}: version 1.0.1, 13th June 2020.\n "
 		echo "The license used for this file and its contents is: BSD-3-Clause. \n "
 		echo "Authors: \n"
 		echo "    Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>"
