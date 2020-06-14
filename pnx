@@ -61,6 +61,7 @@ case "$1" in
 		echo "    --key, Use pacman-key: pacman-key - manage pacman's list of trusted keys."
 		echo "    --repo, Use repo-add: repo-add - package database maintenance utility."
 		echo "    --launch, Launch a program installed using PNX."
+		echo "    --makepkg, Create a package from a PKGBUILD."
 		echo "    --remove-dirs, Remove PNX directories."
 		echo "    --debug, Run PNX with debug on."
 		echo "    --release, Show the version. \n"
