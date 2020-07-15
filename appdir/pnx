@@ -1,4 +1,6 @@
-#! /bin/sh
+#!/bin/sh
+
+set -x
 
 #############################################################################################################################################################################
 #   The license used for this file and its contents is: BSD-3-Clause                                                                                                        #
@@ -24,144 +26,136 @@
 #############################################################################################################################################################################
 
 
-# #########################
-# ####   pnx v1.0.0.    ###
-# #########################
+# ##########################
+# ####    PNX v1.0.3    ####
+# ##########################
+
+
+if [ "$EUID" -ne 0 ]
+  then _e "Please run PNX as root.\nTry with: sudo ${0##*/}\n Exiting..."
+  exit
+fi
 
 _e () { echo -e "${0##*/}: \e[31mError:\e[0m $@" >&2; exit 1; }
 
 
-#		Set pnx directories.
+# -- Set PNX directories.
 
-PNX_ROOT=~/.pnx
-PNX_CACHE="$PNX_ROOT/var/lib/pacman"
-
-
-#		Version and commit that generated this build.
-
-_pnx_version=1.0.0
-PNX_COMMIT_HASH=@_COMMIT@
+PNX_ROOT="/home/.pnx"
+PNX_CACHE="/home/.pnx/var/lib/pacman"
+PNX_KEYRINGS="/usr/share/pacman/keyrings"
 
 
-#		Flags for the command.
+# -- Flags for the command.
 
 case "$1" in
 
 	-h|--help)
 
-		echo "Welcome to pnx!"
-		echo "Description:"
-		echo "    pnx is a wrapper for Pacman. Pacman is a package management utility that tracks installed packages on a Linux system."
-		echo "    This wrapper allows the user to use Pacman on a Linux distribution that is not a derivative of Arch Linux without"
-		echo "    conflicts with the distribution existing package manager."
-		echo "    Report bugs at: https://github.com/Nitrux/pnx."
-		echo "Flags:"
-		echo "    --initialize, Create pnx root directory."
+		echo "${0##*/}: Welcome to PNX!. \n"
+		echo "Description: \n"
+		echo "    PNX is a wrapper for Pacman. Pacman is a package management utility that tracks installed packages on a Linux system."
+		echo "    This wrapper allows the user to use Pacman on a Linux distribution that is not a derivative of Arch Linux without conflicts with"
+		echo "    the distribution existing package manager.  \n"
+		echo "    Report bugs at: https://github.com/Nitrux/pnx. \n"
+		echo "Flags: \n"
+		echo "    --initialize, Create PNX root directory."
 		echo "    --key, Use pacman-key: pacman-key - manage pacman's list of trusted keys."
 		echo "    --repo, Use repo-add: repo-add - package database maintenance utility."
-		echo "    --launch, Launch a program installed using pnx."
-		echo "    --remove-dirs, Remove pnx directories."
-		echo "    --debug, Run pnx with debug on."
-		echo "    --release, Show the version."
-		echo "Usage:"
-		echo "    When no flag is specified, pnx will default to package management."
+		echo "    --launch, Launch a program installed using PNX."
+		echo "    --makepkg, Create a package from a PKGBUILD (Experimental)."
+		echo "    --aur, Download and install apackage from the AUR using Yay (Experimental)."
+		echo "    --remove-dirs, Remove PNX directories."
+		echo "    --debug, Run PNX with debug on."
+		echo "    --release, Show the version. \n"
+		echo "Usage: \n"
+		echo "    When no flag is specified, PNX will default to package management."
 		echo "        pnx <operation> [options] [targets]"
-		echo "        pnx <flag> <operation> [options] [targets]"
-		echo "Examples:"
-		echo "pnx -S inkscape"
-		echo "    To install a package using pnx use the same syntax as Pacman."
+		echo "        pnx <flag> <operation> [options] [targets] \n"
+		echo "Examples: \n"
+		echo "sudo pnx -S inkscape"
+		echo "    To install a package using PNX use the same syntax as Pacman."
 		echo "    For example, pnx -S inkscape will download and install inkscape and all the packages it depends on."
-		echo "pnx -Syu"
+		echo "sudo pnx -Syu"
 		echo "    Update package list and upgrade all packages afterwards."
-		echo "pnx --key --init"
+		echo "sudo pnx --key --init"
 		echo "    Ensure the keyring is properly initialized and has the required access permissions."
-		echo "pnx --repo --verify"
+		echo "sudo pnx --repo --verify"
 		echo "    Verify the PGP signature of the database before updating the database."
 		echo "pnx --launch inkscape"
-		echo "    This will execute a program installed using pnx."
+		echo "    This will execute a program installed using PNX."
+		echo "\n"
 		exit
 
 	;;
-
-
-	--launch)
-
-		export \
-			PATH=$PNX_ROOT/usr/bin/:$PNX_ROOT/usr/sbin/:$PNX_ROOT/usr/games/:$PNX_ROOT/bin/:$PNX_ROOT/sbin/ \
-			LD_LIBRARY_PATH=$PNX_ROOT/usr/lib/:$PNX_ROOT/usr/lib/i386-linux-gnu/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/:$PNX_ROOT/usr/lib32/:$PNX_ROOT/usr/lib64/:$PNX_ROOT/lib/:$PNX_ROOT/lib/i386-linux-gnu/:$PNX_ROOT/lib/x86_64-linux-gnu/:$PNX_ROOT/lib32/:$PNX_ROOT/lib64/:$PNX_ROOT/usr/lib/dri/:$PNX_ROOT/usr/lib/pulseaudio/:$PNX_ROOT/usr/lib/gdk-pixbuf-2.0/:$PNX_ROOT/gs-plugins-13/:$PNX_ROOT/usr/lib/systemd/:$PNX_ROOT/usr/lib/samba/:$PNX_ROOT/usr/lib/girepository-1.0/:$PNX_ROOT/usr/lib/WebKitNetworkProcess/:$PNX_ROOT/usr/lib/epiphany/:$PNX_ROOT/usr/lib/opera/:$PNX_ROOT/usr/lib/firefox/ \
-			XDG_DATA_DIRS=$PNX_ROOT/usr/share/ \
-			GSETTINGS_SCHEMA_DIR=$PNX_ROOT/usr/share/glib-2.0/schemas/ \
-			QT_PLUGIN_PATH=$PNX_ROOT/usr/lib/qt4/plugins/:$PNX_ROOT/usr/lib/i386-linux-gnu/qt4/plugins/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/qt4/plugins/:$PNX_ROOT/usr/lib32/qt4/plugins/:$PNX_ROOT/usr/lib64/qt4/plugins/:$PNX_ROOT/usr/lib/qt5/plugins/:$PNX_ROOT/usr/lib/i386-linux-gnu/qt5/plugins/:$PNX_ROOT/usr/lib/x86_64-linux-gnu/qt5/plugins/:$PNX_ROOT/usr/lib32/qt5/plugins/:$PNX_ROOT/usr/lib64/qt5/plugins/
-			TERM=xterm-256color \
-			GTK_PATH=$PNX_ROOT/usr/lib/:$PNX_ROOT/lib:$PNX_ROOT/lib64 \
-
-		shift && "$@"
-		exit $?
-
-	;;
-
-
-	--release)
-
-		echo "pnx: version $_pnx_version, 14th January 2020."
-		echo "The license used for this file and its contents is: BSD-3-Clause."
-		echo "Authors:"
-		echo "    Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>"
-		echo "    Copyright <2020> <Luis Lavaire <luis_lavaire@nxos.org>>"
-		echo "Made with ♥ by Nitrux Latinoamericana S.C."
-		exit
-
-	;;
-
 
 	--initialize)
 
-		test \
-			-d $PNX_ROOT \
-			-a -d $PNX_CACHE \
-			-a -d $PNX_KEYRINGS &&
-		_e "Already initialized."
-
-		mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS
-
-		mkdir -p "$PNX_ROOT/var/lib/pacman"
-
-		pacman --noconfirm -r $PNX_ROOT -Syu \
-			base bash readline ncurses util-linux coreutils libcap iputils which grep sudo \
-			acl archlinux-keyring attr bzip2 curl expat glibc gpgme libarchive openssl nss nspr \
-			libassuan libgpg-error libnghttp2 libssh2 lzo openssl pacman pacman-mirrorlist xz zlib \
-			krb5 e2fsprogs keyutils libidn2 libunistring gcc-libs lz4 libpsl icu libunistring zstd
-
-		runch $PNX_ROOT pacman --noconfirm -S base
-
-		echo "Please run these commands to start using pnx:"
-		echo "$0 --key --init"
-		echo "$0 --key --populate"
+		[ -d $PNX_ROOT ] && _e "${0##*/} directory already exist!.\nExiting...\n " || echo "${0##*/} directories do not exist, creating...\n\n Please run these commands to start using PNX:\n sudo ${0##*/} --key --init\n sudo ${0##*/} --key --populate\n " && mkdir -p $PNX_ROOT $PNX_CACHE $PNX_KEYRINGS && cp -a $APPDIR/usr/share/pacman/keyrings/* $PNX_KEYRINGS
 		exit
 
 	;;
-
 
 	--key)
 
-		export LIBRARY=$APPDIR/usr/share/makepkg
-		runch $PNX_ROOT pacman-key "$@"
+		export \
+			LIBRARY=$APPDIR/usr/share/makepkg &&
+		pacman-key "$2"
 		exit
 
 	;;
-
 
 	--repo)
 
-		runch $PNX_ROOT repo-add "$@"
+		repo-add "$2"
 		exit
 
 	;;
 
+	--launch)
+
+		pnx-launch "$@"
+		exit
+	;;
+
+	--makepkg)
+
+		export \
+			LIBRARY=$APPDIR/usr/share/makepkg &&
+		makepkg "$2"
+		exit
+
+	;;
+
+	--aur)
+
+		yay "$2"
+		exit
+
+	;;
 
 	--remove-dirs)
 
-		rm -rf $PNX_ROOT
+		rm -R $PNX_ROOT
+		exit
+
+	;;
+
+	--debug)
+
+		set -x
+		shift
+
+	;;
+
+	--release)
+
+		echo "${0##*/}: version 1.0.3, 25th June 2020.\n "
+		echo "The license used for this file and its contents is: BSD-3-Clause. \n "
+		echo "Authors: \n"
+		echo "    Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>"
+		echo "    Copyright <2020> <Luis Lavaire <luis_lavaire@nxos.org>>\n "
+		echo "Made with ♥ by Nitrux Latinoamericana S.C.\n "
 		exit
 
 	;;
@@ -169,19 +163,21 @@ case "$1" in
 esac
 
 
-#		Probe for pnx root existence.
+# -- Probe for PNX root existence.
 
 test -d $PNX_ROOT ||
-	_e "pnx has not been initialized. Please run: $0 --initialize."
+	_e "${0##*/} has not been initialized. Please run: sudo ${0##*/} --initialize\nExiting...\n "
 
 
-#		By default use Pacman if no flag is specified.
+# -- By default use Pacman if no flag is specified.
 
-runch $PNX_ROOT pacman "$@"
+	pacman "$@"
 
 
-#		Integrate .desktop files from pnx directory into the user's directory after installing a program with Pacman.
+# -- Integrate .desktop files from pnx directory into the user's directory after installing a program with Pacman.
 
 # for dot_d in $(pacman -r $PNX_ROOT -Qql | grep '\.desktop'); do
 # 	ln -sf $PNX_ROOT/$dot_d $HOME/.local/share/applications
 # done
+
+exit 0
