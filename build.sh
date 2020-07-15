@@ -66,6 +66,7 @@ sed -i "s/@_COMMIT@/$TRAVIS_COMMIT/" appdir/pnx
 )
 
 mkdir out
+wget -q https://raw.githubusercontent.com/Nitrux/tools/master/aw
+sh ./aw appimagetool -u "$UPDATE_URL" appdir out/"$RELEASE_NAME"
 
-wget -q https://raw.githubusercontent.com/Nitrux/tools/master/aw \
-	| sh -s appimagetool -u "$UPDATE_URL" appdir out/"$RELEASE_NAME"
+ls out
