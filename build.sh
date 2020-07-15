@@ -22,7 +22,7 @@ chmod +x execs
 ./copier \
 	appdir \
 	/bin/bash \
-	$(execs appdir/pnx) \
+	$(./execs appdir/pnx) \
 	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+[^/]$')
 
 
