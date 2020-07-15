@@ -1,10 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=PNX
-Comment=PNX is a wrapper for Pacman.
-Exec=./pnx
-Categories=Utility;
+Name=pnx
+Exec=pnx
 Icon=pnx
-StartupNotify=false
-Terminal=false
-NoDisplay=true
+Comment="Pacman out of Arch Linux™."
+Categories=Utility;
+OnlyShowIn=
+X-AppImage-Integrate=false

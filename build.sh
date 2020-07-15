@@ -3,7 +3,7 @@
 
 #    Install dependencies.
 
-pacman --noconfirm -Syu base-devel wget patchelf file git
+pacman --noconfirm -Syu base-devel wget patchelf file git yay
 
 
 #    Add tooling for AppImage.
@@ -19,12 +19,10 @@ chmod +x execs
 
 #    Copy binaries and its dependencies to appdir.
 
-wget -q https://raw.githubusercontent.com/Nitrux/tools/master/runch
-
 ./copier \
 	appdir \
 	/bin/bash \
-	runch \
+	$(execs appdir/pnx) \
 	$(pacman -Qql pacman | grep -E '(bin|makepkg)/.+[^/]$')
 
 
@@ -55,15 +53,19 @@ sed -i "s/@_COMMIT@/$TRAVIS_COMMIT/" appdir/pnx
 	delete_blacklisted
 	rm functions.sh
 
-	find lib/x86_64-linux-gnu -type f -exec patchelf --set-rpath '$ORIGIN/././' {} \;
-	find bin -type f -exec patchelf --set-rpath '$ORIGIN/../lib/x86_64-linux-gnu' {} \;
-	find sbin -type f -exec patchelf --set-rpath '$ORIGIN/../lib/x86_64-linux-gnu' {} \;
-	find usr/bin -type f -exec patchelf --set-rpath '$ORIGIN/../../lib/x86_64-linux-gnu' {} \;
-	find usr/sbin -type f -exec patchelf --set-rpath '$ORIGIN/../../lib/x86_64-linux-gnu' {} \;
+	test -d lib/x86_64-linux-gnu &&
+		find lib/x86_64-linux-gnu -type f -exec patchelf --set-rpath '$ORIGIN/././' {} \;
+	test -d bin &&
+		find bin -type f -exec patchelf --set-rpath '$ORIGIN/../lib/x86_64-linux-gnu' {} \;
+	test -d sbin &&
+		find sbin -type f -exec patchelf --set-rpath '$ORIGIN/../lib/x86_64-linux-gnu' {} \;
+	test -d usr/bin &&
+		find usr/bin -type f -exec patchelf --set-rpath '$ORIGIN/../../lib/x86_64-linux-gnu' {} \;
+	test -d usr/sbin &&
+		find usr/sbin -type f -exec patchelf --set-rpath '$ORIGIN/../../lib/x86_64-linux-gnu' {} \;
 )
 
-wget -q https://raw.githubusercontent.com/Nitrux/tools/master/aw
-chmod a+x aw
-
 mkdir out
-./aw appimagetool -u "$UPDATE_URL" appdir out/$RELEASE_NAME
+
+wget -q https://raw.githubusercontent.com/Nitrux/tools/master/aw \
+	| sh -s appimagetool -u "$UPDATE_URL" appdir out/"$RELEASE_NAME"
