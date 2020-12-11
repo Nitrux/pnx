@@ -20,7 +20,7 @@ pnx works by acting as a wrapper for `pacman` and its various tools like `pacman
 
 `sudo pnx -S bash`
 
-In this way, pnx will install Bash from the Arch Linux repositories.
+In this way, pnx will install Bash from the repositories (see [How to use it](https://github.com/Nitrux/pnx#how-to-use-it)).
 
 pnx will not install the package to the host root directory; instead, it uses a separate directory as its root directory for installation located in `/home/.pnx`. To run a program installed using pnx, you can use it like this.
 
