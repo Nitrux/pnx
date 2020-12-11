@@ -1,0 +1,181 @@
+#! /bin/sh
+
+#############################################################################################################
+#   The license used for this file and its contents is: BSD-3-Clause                                        #
+#                                                                                                           #
+#   Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>                                                   #
+#   Copyright <2020> <Luis Lavaire <luis_lavaire@nxos.org>>                                                 #
+#                                                                                                           #
+#   Redistribution and use in source and binary forms, with or without										#
+#	modification, are permitted provided that the following conditions are met:                          	#
+#																											#
+#    1. Redistributions of source code must retain the above copyright notice,								#
+#		this list of conditions and the following disclaimer.                                        		#
+# 																											#
+#    2. Redistributions in binary form must reproduce the above copyright notice,							#
+#		this list of conditions and the following disclaimer in the documentation and/or other materials	#
+#		provided with the distribution.																		#
+# 																											#
+#    3. Neither the name of the copyright holder nor the names of its contributors may be used to			#
+#		endorse or promote products derived from this software without specific prior written permission.	#
+#																											#
+#	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED	#
+#	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A	#
+#	PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR #
+#	ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT		#
+#	LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS		#
+#	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR	#
+#	TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF	#
+#	ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.																#
+#############################################################################################################
+
+
+#################
+####   pnx    ###
+#################
+
+err () { printf "${0##*/}: \e[31merror:\e[0m: %b\n" "$@" >&2; exit $?; }
+put () { printf "%b\n" "$@" >&2; }
+
+
+#	set pnx directories.
+
+pnx_root=~/.pnx
+pnx_cache="$pnx_root/var/lib/pacman"
+pnx_keyrings="/usr/share/pacman/keyrings"
+
+
+#	version and commit that generated this build.
+
+_pnx_version=0.0.5
+pnx_commit_hash=@_COMMIT@
+
+
+#	flag parsing.
+
+case "$1" in
+	-h|--help)
+		put \
+			 "Welcome to pnx!" \
+			 "Description:" \
+			 "    pnx is a wrapper for Pacman. Pacman is a package management utility that tracks installed packages on a Linux system." \
+			 "    This wrapper allows the user to use Pacman on a Linux distribution that is not a derivative of Arch Linux without" \
+			 "    conflicts with the distribution existing package manager." \
+			 "    Report bugs at: https://github.com/Nitrux/pnx." \
+			 "Flags:" \
+			 "    --initialize, Create pnx root directory." \
+			 "    --key, Use pacman-key: pacman-key - manage pacman's list of trusted keys." \
+			 "    --repo, Use repo-add: repo-add - package database maintenance utility." \
+			 "    --launch, Launch a program installed using pnx." \
+			 "    --remove-dirs, Remove pnx directories." \
+			 "    --debug, Run pnx with debug on." \
+			 "    --release, Show the version." \
+			 "Usage:" \
+			 "    When no flag is specified, pnx will default to package management." \
+			 "        pnx <operation> [options] [targets]" \
+			 "        pnx <flag> <operation> [options] [targets]" \
+			 "Examples:" \
+			 "pnx -S inkscape" \
+			 "    To install a package using pnx use the same syntax as Pacman." \
+			 "    For example, pnx -S inkscape will download and install inkscape and all the packages it depends on." \
+			 "pnx -Syu" \
+			 "    Update package list and upgrade all packages afterwards." \
+			 "pnx --key --init" \
+			 "    Ensure the keyring is properly initialized and has the required access permissions." \
+			 "pnx --repo --verify" \
+			 "    Verify the PGP signature of the database before updating the database." \
+			 "pnx --launch inkscape" \
+			 "    This will execute a program installed using pnx."
+	;;
+
+	--initialize)
+		test \
+			-d $pnx_root \
+			-a -d $pnx_cache \
+			-a -d $pnx_keyrings &&
+		err "Already initialized."
+
+		mkdir -p \
+			"$pnx_root" \
+			"$pnx_root/var/lib/pacman" \
+			"$pnx_cache" \
+			"$pnx_keyrings"
+
+		pacman --noconfirm -r $pnx_root -Syu \
+			base bash readline ncurses util-linux coreutils libcap iputils which grep sudo \
+			acl archlinux-keyring attr bzip2 curl expat glibc gpgme libarchive openssl nss nspr \
+			libassuan libgpg-error libnghttp2 libssh2 lzo openssl pacman pacman-mirrorlist xz zlib \
+			krb5 e2fsprogs keyutils libidn2 libunistring gcc-libs lz4 libpsl icu libunistring zstd
+
+		 "$0" --key --init
+		 "$0" --key --populate
+		
+		cp -a $APPDIR/usr/share/pacman/keyrings/* $pnx_keyrings
+		exit
+
+	;;
+
+	--key)
+		export LIBRARY=$APPDIR/usr/share/makepkg
+		exec chroot "$pnx_root" pacman-key "$@"
+	;;
+
+	--repo)
+		exec runch "$pnx_root" repo-add "$@"
+	;;
+
+	--launch)
+		export \
+			PATH=$pnx_root/usr/bin/:$pnx_root/usr/sbin/:$pnx_root/usr/games/:$pnx_root/bin/:$pnx_root/sbin/ \
+			LD_LIBRARY_PATH=$pnx_root/usr/lib/:$pnx_root/usr/lib/i386-linux-gnu/:$pnx_root/usr/lib/x86_64-linux-gnu/:$pnx_root/usr/lib32/:$pnx_root/usr/lib64/:$pnx_root/lib/:$pnx_root/lib/i386-linux-gnu/:$pnx_root/lib/x86_64-linux-gnu/:$pnx_root/lib32/:$pnx_root/lib64/:$pnx_root/usr/lib/dri/:$pnx_root/usr/lib/pulseaudio/:$pnx_root/usr/lib/gdk-pixbuf-2.0/:$pnx_root/gs-plugins-13/:$pnx_root/usr/lib/systemd/:$pnx_root/usr/lib/samba/:$pnx_root/usr/lib/girepository-1.0/:$pnx_root/usr/lib/WebKitNetworkProcess/:$pnx_root/usr/lib/epiphany/:$pnx_root/usr/lib/opera/:$pnx_root/usr/lib/firefox/ \
+			XDG_DATA_DIRS=$pnx_root/usr/share/ \
+			GSETTINGS_SCHEMA_DIR=$pnx_root/usr/share/glib-2.0/schemas/ \
+			QT_PLUGIN_PATH=$pnx_root/usr/lib/qt4/plugins/:$pnx_root/usr/lib/i386-linux-gnu/qt4/plugins/:$pnx_root/usr/lib/x86_64-linux-gnu/qt4/plugins/:$pnx_root/usr/lib32/qt4/plugins/:$pnx_root/usr/lib64/qt4/plugins/:$pnx_root/usr/lib/qt5/plugins/:$pnx_root/usr/lib/i386-linux-gnu/qt5/plugins/:$pnx_root/usr/lib/x86_64-linux-gnu/qt5/plugins/:$pnx_root/usr/lib32/qt5/plugins/:$pnx_root/usr/lib64/qt5/plugins/
+			TERM=xterm-256color \
+			GTK_PATH=$pnx_root/usr/lib/:$pnx_root/lib:$pnx_root/lib64 \
+
+		shift; exec "$@"
+	;;
+
+	--remove-dirs)
+		rm -rf "$pnx_root"
+		exit
+	;;
+
+	--debug)
+		set -x
+		shift
+
+	;;
+
+	--release)
+		put \
+			 "pnx: version $_pnx_version, December 2020." \
+			 "The license used for this file and its contents is: BSD-3-Clause." \
+			 "Authors:" \
+			 "    Copyright <2020> <Uri Herrera <uri_herrera@nxos.org>>" \
+			 "    Copyright <2020> <Luis Lavaire <llavaire01@gmail.org>>" \
+			 "Made with ♥ by Nitrux Latinoamericana S.C."
+	;;
+
+esac
+
+
+#	probe for pnx root existence.
+
+test -d $pnx_root ||
+	err "pnx has not been initialized. Please run: ${0##*/} --initialize."
+
+
+#	by default use pacman if no flag is specified.
+
+pacman -r "$pnx_root" "$@"
+
+
+#	Integrate .desktop files from pnx directory into the user's directory after installing a program with Pacman.
+
+# for dot_d in $(pacman -r $pnx_root -Qql | grep '\.desktop'); do
+# 	ln -sf $pnx_root/$dot_d $HOME/.local/share/applications
+# done
+
+exit 0

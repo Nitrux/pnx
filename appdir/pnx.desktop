@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=pnx
+Exec=pnx
+Icon=pnx
+Comment="Pacman out of Arch Linux™."
+Categories=Utility;
+OnlyShowIn=
+X-AppImage-Integrate=false
+NoDisplay=True
