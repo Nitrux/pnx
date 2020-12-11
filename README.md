@@ -4,7 +4,7 @@ Wakka-wakka.
 
 What is pnx
 ========
-pnx (lowercase; originally Pacman for Nitrux) allows users to install software from Linux distributions that use the Pacman package manager on other Linux distributions that don’t use it without interfering with the distributions default package manager. pnx, by default, utilizes the Arch Linux repositories.
+pnx (lowercase; originally Pacman for Nitrux) allows users to install software from Linux distributions that use the Pacman package manager on other Linux distributions that don’t use it without interfering with the distributions default package manager.
 
 What pnx isn't
 ========
