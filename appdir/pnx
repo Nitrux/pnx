@@ -97,7 +97,6 @@ case "$1" in
 
 		mkdir -p \
 			"$pnx_root" \
-			"$pnx_root/var/lib/pacman" \
 			"$pnx_cache" \
 			"$pnx_keyrings"
 
@@ -109,9 +108,6 @@ case "$1" in
 
 		 "$0" --key --init
 		 "$0" --key --populate
-		
-		cp -a $APPDIR/usr/share/pacman/keyrings/* $pnx_keyrings
-		exit
 
 	;;
 
@@ -140,12 +136,6 @@ case "$1" in
 	--remove-dirs)
 		rm -rf "$pnx_root"
 		exit
-	;;
-
-	--debug)
-		set -x
-		shift
-
 	;;
 
 	--release)
