@@ -34,9 +34,7 @@ To use pnx the host system should provide the following configuration files for 
 
    - /etc/pacman.d/mirrorlist
    - /etc/pacman.conf
-   - /usr/share/pacman/keyrings/archlinux-revoked
-   - /usr/share/pacman/keyrings/archlinux-trusted
-   - /usr/share/pacman/keyrings/archlinux.gpg
+   - /usr/share/pacman/keyrings/{archlinux-revoked,archlinux-trusted,archlinux.gpg} or similar.
 
 Do note that these files _wille be present in a system that already uses Pacman_ like Arch Linux, Manjaro, KaOS, Chakra, etc. 
 
