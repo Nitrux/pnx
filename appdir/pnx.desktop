@@ -7,4 +7,4 @@ Comment="Pacman out of Arch Linux™."
 Categories=Utility;
 OnlyShowIn=
 X-AppImage-Integrate=false
-NoDisplay=True
+NoDisplay=true
