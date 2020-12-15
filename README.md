@@ -43,7 +43,7 @@ Status
 This is a list of features that work in pnx.
    - Repository and key management.
    - Installation of packages from a repository.
-   - Launching installed progams _when GLibC matches host version_ (see [Known issues](https://github.com/Nitrux/pnx#known-issues)).
+   - Launching installed progams _when GLibc matches host version_ (see [Known issues](https://github.com/Nitrux/pnx#known-issues)).
 
 Contribute
 ========
