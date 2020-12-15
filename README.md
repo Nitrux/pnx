@@ -38,9 +38,12 @@ To use pnx the host system should provide the following configuration files for 
 
 Do note that these files _wille be present in a system that already uses Pacman_ like Arch Linux, Manjaro, KaOS, Chakra, etc. 
 
-Support for the AUR (or similar) repository
+Status
 ========
-pnx does not have support for building packages from the Arch Linux User Repository.
+This is a list of features that work in pnx.
+   - Repository and key management.
+   - Installation of packages from a repository.
+   - Launching installed progams _when GLibC matches host version_ see [Known issues](https://github.com/Nitrux/pnx#known-issues))
 
 Contribute
 ========
@@ -51,7 +54,7 @@ Known issues
 This is a list of known issues with pnx.
 
    - pnx does not support bulding AUR packages.
-   - pnx does not resolve GNU C Library compatibility. If the program installed from Arch Linux was compiled against a newer Glibc version and the host does not have the same Glibc version, the program will not run.
+   - pnx does not resolve GNU C Library compatibility. If the program installed from Arch Linux (for example) was compiled against a newer Glibc version and the host does not have the same Glibc version, the program will not run.
    - pnx does not integrate the programs installed from Arch Linux to the host application menu.
 
 # Issues
