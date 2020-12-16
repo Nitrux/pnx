@@ -55,7 +55,7 @@ This is a list of known issues with pnx.
 
    - pnx does not support bulding AUR packages.
    - pnx does not resolve GNU C Library compatibility. If the program installed from Arch Linux (for example) was compiled against a newer Glibc version and the host does not have the same Glibc version, the program will not run.
-   - pnx does not integrate the programs installed from Arch Linux to the host application menu.
+   - pnx does not integrate the programs installed using pnx to the host application menu.
 
 # Issues
 If you find problems with the contents of this repository please create an issue.
